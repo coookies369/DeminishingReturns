@@ -1,0 +1,12 @@
+{
+    "name": "DeminishingReturns",
+    "description": "Find less scrap on recently visited moons",
+    "version_number": "1.0.0",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100",
+        "BMX-LobbyCompatibility-1.1.0",
+        "MaxWasUnavailable-LethalModDataLib-1.2.2",
+        "xilophor-LethalNetworkAPI-2.1.7"
+    ],
+    "website_url": "https://github.com/coookies369/DeminishingReturns"
+}

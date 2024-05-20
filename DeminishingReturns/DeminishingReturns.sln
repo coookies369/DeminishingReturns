@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeminishingReturns", "DeminishingReturns.csproj", "{C3B1CDCE-15AD-430C-8903-D5468706A4FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3B1CDCE-15AD-430C-8903-D5468706A4FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B1CDCE-15AD-430C-8903-D5468706A4FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B1CDCE-15AD-430C-8903-D5468706A4FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3B1CDCE-15AD-430C-8903-D5468706A4FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6835CB4-019E-42A0-81B6-3603B2D922F5}
+	EndGlobalSection
+EndGlobal
