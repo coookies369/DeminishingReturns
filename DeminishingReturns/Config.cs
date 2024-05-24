@@ -2,29 +2,22 @@ using BepInEx.Configuration;
 
 public class Config
 {
-        public static ConfigEntry<float> deminishedScrapMultiplier;
-        public static ConfigEntry<int> recentMoonCount;
         public static ConfigEntry<bool> resetAfterQuota;
+        public static ConfigEntry<float> dailyRegen;
 
         public Config(ConfigFile cfg)
         {
-                deminishedScrapMultiplier = cfg.Bind(
-                        "General",
-                        "DeminishedScrapMultiplier",
-                        0.5f,
-                        "Multiplier for scrap amounts on deminished moons"
-                );
-                recentMoonCount = cfg.Bind(
-                        "General",
-                        "RecentMoonCount",
-                        3,
-                        "How many days before a recent moon is \"forgotten\""
-                );
                 resetAfterQuota = cfg.Bind(
                         "General",
                         "ResetAfterQuota",
                         true,
-                        "If the recent moons list should be cleared after a quota cycle"
+                        "Reset all scrap reduction after each quota cycle"
+                );
+                dailyRegen = cfg.Bind(
+                        "General",
+                        "DailyRegen",
+                        0.25f,
+                        "How much of a moon's multiplier should be restored each day"
                 );
         }
 }

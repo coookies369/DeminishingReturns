@@ -1,5 +1,9 @@
 using HarmonyLib;
 using BepInEx.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace DeminishingReturns.Patches;
 
@@ -12,41 +16,42 @@ public class StartOfRoundPatch
     {
         if (__instance.IsServer && __instance.inShipPhase)
         {
-            if (DeminishingReturns.recentMoonsSave.Contains(__instance.currentLevel.levelID))
+            if (!DeminishingReturns.moonMultipliers.ContainsKey(__instance.currentLevel.levelID))
             {
-                RoundManager.Instance.scrapAmountMultiplier = Config.deminishedScrapMultiplier.Value;
+                DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID] = 1.0f;
             }
-            else
-            {
-                RoundManager.Instance.scrapAmountMultiplier = 1f;
-            }
+            RoundManager.Instance.scrapAmountMultiplier = DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID];
         }
     }
 
     [HarmonyPatch("EndOfGame")]
     [HarmonyPrefix]
-    private static void recordRecentMoons(StartOfRound __instance)
+    private static void setMoonMultipliers(StartOfRound __instance)
     {
         if (__instance.IsServer)
         {
-            if (__instance.currentLevel.PlanetName == "71 Gordion")
+            if (__instance.currentLevel.planetHasTime)
             {
-                DeminishingReturns.Logger.LogDebug("Not marking this moon as recent because it is the company building");
-            }
-            else
-            {
-                DeminishingReturns.recentMoonsSave.Enqueue(__instance.currentLevel.levelID);
-            }
-            while (DeminishingReturns.recentMoonsSave.Count > Config.recentMoonCount.Value)
-            {
-                DeminishingReturns.recentMoonsSave.Dequeue();
+                var keys = DeminishingReturns.moonMultipliers.Keys.ToList();
+                foreach (var key in keys)
+                {
+                    var value = DeminishingReturns.moonMultipliers[key];
+                    value += Config.dailyRegen.Value;
+                    value = Mathf.Clamp(value, 0.0f, 1.0f);
+                    DeminishingReturns.moonMultipliers[key] = value;
+                }
+                if (!__instance.allPlayersDead)
+                {
+                    DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID] -= (float)RoundManager.Instance.valueOfFoundScrapItems / RoundManager.Instance.totalScrapValueInLevel;
+                    DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID] = Mathf.Clamp(DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID], 0.0f, 1.0f);
+                }
             }
             if (Config.resetAfterQuota.Value && ((float)(TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled) <= 0f || __instance.isChallengeFile))
             {
-                DeminishingReturns.recentMoonsSave.Clear();
-                DeminishingReturns.Logger.LogDebug("Cleared recent moons list");
+                DeminishingReturns.moonMultipliers.Clear();
+                DeminishingReturns.Logger.LogDebug("Cleared moon multipliers");
             }
-            DeminishingReturns.recentMoons.Value = DeminishingReturns.recentMoonsSave;
+            DeminishingReturns.moonMultipliersNet.Value = DeminishingReturns.moonMultipliers; //This triggers a sync for the network variable
         }
     }
 }

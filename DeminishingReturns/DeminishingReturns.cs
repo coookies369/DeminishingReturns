@@ -16,6 +16,7 @@ namespace DeminishingReturns;
 [LobbyCompatibility(CompatibilityLevel.Everyone, VersionStrictness.Minor)]
 [BepInDependency("MaxWasUnavailable.LethalModDataLib", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("LethalNetworkAPI", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.SoftDependency)]
 public class DeminishingReturns : BaseUnityPlugin
 {
     public static DeminishingReturns Instance { get; private set; } = null!;
@@ -25,8 +26,8 @@ public class DeminishingReturns : BaseUnityPlugin
     public static Config MyConfig { get; internal set; }
 
     [ModData(SaveWhen.OnAutoSave, LoadWhen.OnLoad, SaveLocation.CurrentSave, ResetWhen.OnGameOver)]
-    public static Queue<int> recentMoonsSave = new Queue<int>();
-    public static LethalNetworkVariable<Queue<int>> recentMoons = new LethalNetworkVariable<Queue<int>>(identifier: "recentMoons") { Value = recentMoonsSave };
+    public static Dictionary<int, float> moonMultipliers = new Dictionary<int, float>();
+    public static LethalNetworkVariable<Dictionary<int, float>> moonMultipliersNet = new LethalNetworkVariable<Dictionary<int, float>>(identifier: "moonMultipliers") { Value = moonMultipliers };
 
     private void Awake()
     {
@@ -34,16 +35,10 @@ public class DeminishingReturns : BaseUnityPlugin
         Instance = this;
 
         MyConfig = new(base.Config);
-        recentMoons.OnValueChanged += NewValue;
 
         Patch();
 
         Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
-    }
-
-    private void NewValue(Queue<int> newValue)
-    {
-        Logger.LogDebug("Synced!");
     }
 
     internal static void Patch()
@@ -53,6 +48,11 @@ public class DeminishingReturns : BaseUnityPlugin
         Logger.LogDebug("Patching...");
 
         Harmony.PatchAll();
+
+        if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("imabatby.lethallevelloader"))
+        {
+            Patches.LLLTerminalPatch.Init();
+        }
 
         Logger.LogDebug("Finished patching!");
     }
