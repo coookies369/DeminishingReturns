@@ -13,6 +13,7 @@ public class LLLTerminalPatch
         );
     }
 
+    [HarmonyPriority(0)]
     private static void addDeminishedWarning(ExtendedLevel extendedLevel, ref string __result)
     {
         float multiplier = DeminishingReturns.moonMultipliers.ContainsKey(extendedLevel.SelectableLevel.levelID) ? DeminishingReturns.moonMultipliers[extendedLevel.SelectableLevel.levelID] : 1.0f;
