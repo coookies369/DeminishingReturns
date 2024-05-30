@@ -4,12 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using LethalNetworkAPI;
 
 namespace DeminishingReturns.Patches;
 
 [HarmonyPatch(typeof(StartOfRound))]
 public class StartOfRoundPatch
 {
+    public static LethalServerMessage<Dictionary<int, float>> syncMoonMultipliersServer = new("moonMultipliers");
+    public static LethalClientMessage<Dictionary<int, float>> syncMoonMultipliersClient = new("moonMultipliers");
+
+    public static void Init()
+    {
+        syncMoonMultipliersClient.OnReceived += SyncMoonMultipliers;
+    }
+
+    private static void SyncMoonMultipliers(Dictionary<int, float> data)
+    {
+        DeminishingReturns.moonMultipliers = data;
+    }
+
     [HarmonyPatch("StartGame")]
     [HarmonyPrefix]
     private static void reduceScrapAmount(StartOfRound __instance)
@@ -30,6 +44,7 @@ public class StartOfRoundPatch
     {
         if (__instance.IsServer)
         {
+            var newMults = new Dictionary<int, float>();
             if (__instance.currentLevel.planetHasTime)
             {
                 var keys = DeminishingReturns.moonMultipliers.Keys.ToList();
@@ -38,20 +53,27 @@ public class StartOfRoundPatch
                     var value = DeminishingReturns.moonMultipliers[key];
                     value += Config.dailyRegen.Value;
                     value = Mathf.Clamp(value, 0.0f, 1.0f);
-                    DeminishingReturns.moonMultipliers[key] = value;
+                    newMults[key] = value;
                 }
                 if (!__instance.allPlayersDead)
                 {
-                    DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID] -= (float)RoundManager.Instance.valueOfFoundScrapItems / RoundManager.Instance.totalScrapValueInLevel;
-                    DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID] = Mathf.Clamp(DeminishingReturns.moonMultipliers[__instance.currentLevel.levelID], 0.0f, 1.0f);
+                    newMults[__instance.currentLevel.levelID] -= (float)RoundManager.Instance.valueOfFoundScrapItems / RoundManager.Instance.totalScrapValueInLevel;
+                    newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
                 }
             }
             if (Config.resetAfterQuota.Value && ((float)(TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled) <= 0f || __instance.isChallengeFile))
             {
-                DeminishingReturns.moonMultipliers.Clear();
+                newMults.Clear();
                 DeminishingReturns.Logger.LogDebug("Cleared moon multipliers");
             }
-            DeminishingReturns.moonMultipliersNet.Value = DeminishingReturns.moonMultipliers; //This triggers a sync for the network variable
+            syncMoonMultipliersServer.SendAllClients(newMults);
         }
+    }
+
+    [HarmonyPatch("OnClientConnect")]
+    [HarmonyPrefix]
+    private static void OnClientConnect(ulong clientId)
+    {
+        syncMoonMultipliersServer.SendClient(DeminishingReturns.moonMultipliers, clientId);
     }
 }

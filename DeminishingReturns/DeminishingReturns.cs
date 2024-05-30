@@ -6,7 +6,6 @@ using LobbyCompatibility.Attributes;
 using LobbyCompatibility.Enums;
 using LethalModDataLib.Attributes;
 using LethalModDataLib.Enums;
-using LethalNetworkAPI;
 using System.Collections.Generic;
 
 namespace DeminishingReturns;
@@ -27,7 +26,6 @@ public class DeminishingReturns : BaseUnityPlugin
 
     [ModData(SaveWhen.OnAutoSave, LoadWhen.OnLoad, SaveLocation.CurrentSave, ResetWhen.OnGameOver)]
     public static Dictionary<int, float> moonMultipliers = new Dictionary<int, float>();
-    public static LethalNetworkVariable<Dictionary<int, float>> moonMultipliersNet = new LethalNetworkVariable<Dictionary<int, float>>(identifier: "moonMultipliers") { Value = moonMultipliers };
 
     private void Awake()
     {
@@ -37,6 +35,7 @@ public class DeminishingReturns : BaseUnityPlugin
         MyConfig = new(base.Config);
 
         Patch();
+        Patches.StartOfRoundPatch.Init();
 
         Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID} v{MyPluginInfo.PLUGIN_VERSION} has loaded!");
     }
