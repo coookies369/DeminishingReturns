@@ -1,6 +1,6 @@
 {
     "name": "DeminishingReturns",
-    "description": "Find less scrap on recently visited moons",
+    "description": "Find less scrap on recently visited moons. I spelled \"diminishing\" wrong",
     "version_number": "1.2.1",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100",
