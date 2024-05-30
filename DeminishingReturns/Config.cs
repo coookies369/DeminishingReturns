@@ -10,7 +10,7 @@ public class Config
                 resetAfterQuota = cfg.Bind(
                         "General",
                         "ResetAfterQuota",
-                        true,
+                        false,
                         "Reset all scrap reduction after each quota cycle"
                 );
                 dailyRegen = cfg.Bind(
