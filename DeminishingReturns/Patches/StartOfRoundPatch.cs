@@ -57,7 +57,20 @@ public class StartOfRoundPatch
                 }
                 if (!__instance.allPlayersDead)
                 {
-                    newMults[__instance.currentLevel.levelID] -= (float)RoundManager.Instance.valueOfFoundScrapItems / RoundManager.Instance.totalScrapValueInLevel;
+                    GrabbableObject[] array = UnityEngine.Object.FindObjectsOfType<GrabbableObject>();
+                    var scrap_collected = RoundManager.Instance.scrapCollectedThisRound.Count;
+                    var scrap_count = scrap_collected; //The below for loop only counts scrap outside of the ship, so we also include scrap collected this round for the total
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        if (array[i].itemProperties.isScrap && !array[i].isInShipRoom)
+                        {
+                            //Because we just count scrap outside of the ship, players can reduce the penalty by dropping some scrap outside of the ship.
+                            //Good news: that's stupid and nobody will do that
+                            scrap_count++;
+                        }
+                    }
+                    DeminishingReturns.Logger.LogDebug($"Collected {scrap_collected} scrap of {scrap_count} total");
+                    newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count;
                     newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
                 }
             }
