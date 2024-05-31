@@ -11,5 +11,5 @@ This mod is incompatible with other mods that have scrap multipliers, such as Me
 
 ## Configs
 
-* **ResetAfterQuota:** If scrap reductions on moons should be reset after each quota cycle. *Default: true*
+* **ResetAfterQuota:** If scrap reductions on moons should be reset after each quota cycle. *Default: false*
 * **dailyRegen:** How much each moons scrap reduction should recover each day. *Default: 0.25*
