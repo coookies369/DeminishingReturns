@@ -4,6 +4,8 @@ This mod, which I apparently spelled wrong, is a mod that punishes players for g
 
 ![Catalog](https://raw.githubusercontent.com/coookies369/DeminishingReturns/main/Images/Catalog.png)
 
+Because going to the same moon repeatedly will reduce it's scrap count, paid moons become less worthwhile. Consider a mod to adjust their prices [such as this one](https://thunderstore.io/c/lethal-company/p/coookies369/MoonCostMultiplier/) (made by me :3)
+
 ## Compatibility
 
 The mod is now compatible with LethalLevelLoader. It is not compatible with TerminalFormatter, but it will work anyway if LethalLevelLoader is also installed.
