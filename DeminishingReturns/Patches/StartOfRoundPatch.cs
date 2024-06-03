@@ -13,6 +13,8 @@ public class StartOfRoundPatch
 {
     public static LethalServerMessage<Dictionary<int, float>> syncMoonMultipliersServer = new("moonMultipliers");
     public static LethalClientMessage<Dictionary<int, float>> syncMoonMultipliersClient = new("moonMultipliers");
+    private static List<GrabbableObject> new_scrap = new List<GrabbableObject>();
+    private static int scrap_count;
 
     public static void Init()
     {
@@ -40,6 +42,30 @@ public class StartOfRoundPatch
 
     [HarmonyPatch("EndOfGame")]
     [HarmonyPrefix]
+    private static void recordScrapCount(StartOfRound __instance)
+    {
+        if (__instance.IsServer)
+        {
+            GrabbableObject[] array = UnityEngine.Object.FindObjectsOfType<GrabbableObject>();
+            
+            scrap_count = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].itemProperties.isScrap) {
+                    scrap_count++;
+                    // if (array[i].isInShipRoom && new_scrap.Contains(array[i]))
+                    // {
+                    //     scrap_collected++;
+                    // }
+                }
+            }
+
+            new_scrap = new List<GrabbableObject>(RoundManager.Instance.scrapCollectedThisRound);
+        }
+    }
+
+    [HarmonyPatch("PassTimeToNextDay")]
+    [HarmonyPrefix]
     private static void setMoonMultipliers(StartOfRound __instance)
     {
         if (__instance.IsServer)
@@ -55,24 +81,19 @@ public class StartOfRoundPatch
                     value = Mathf.Clamp(value, 0.0f, 1.0f);
                     newMults[key] = value;
                 }
-                if (!__instance.allPlayersDead)
+
+                var scrap_collected = 0;
+                foreach (GrabbableObject scrap in new_scrap)
                 {
-                    GrabbableObject[] array = UnityEngine.Object.FindObjectsOfType<GrabbableObject>();
-                    var scrap_collected = RoundManager.Instance.scrapCollectedThisRound.Count;
-                    var scrap_count = scrap_collected; //The below for loop only counts scrap outside of the ship, so we also include scrap collected this round for the total
-                    for (int i = 0; i < array.Length; i++)
+                    if (scrap != null)
                     {
-                        if (array[i].itemProperties.isScrap && !array[i].isInShipRoom)
-                        {
-                            //Because we just count scrap outside of the ship, players can reduce the penalty by dropping some scrap outside of the ship.
-                            //Good news: that's stupid and nobody will do that
-                            scrap_count++;
-                        }
+                        scrap_collected ++;
                     }
-                    DeminishingReturns.Logger.LogDebug($"Collected {scrap_collected} scrap of {scrap_count} total");
-                    newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count;
-                    newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
                 }
+
+                DeminishingReturns.Logger.LogDebug($"Collected {scrap_collected} scrap of {scrap_count} total");
+                newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count;
+                newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
             }
             if (Config.resetAfterQuota.Value && ((float)(TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled) <= 0f || __instance.isChallengeFile))
             {
