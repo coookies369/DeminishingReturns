@@ -53,10 +53,6 @@ public class StartOfRoundPatch
             {
                 if (array[i].itemProperties.isScrap) {
                     scrap_count++;
-                    // if (array[i].isInShipRoom && new_scrap.Contains(array[i]))
-                    // {
-                    //     scrap_collected++;
-                    // }
                 }
             }
 
