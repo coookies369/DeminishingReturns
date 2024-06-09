@@ -17,6 +17,6 @@ public class LLLTerminalPatch
     private static void AddDeminishedWarning(ExtendedLevel extendedLevel, ref string __result)
     {
         float multiplier = DeminishingReturns.moonMultipliers.ContainsKey(extendedLevel.SelectableLevel.levelID) ? DeminishingReturns.moonMultipliers[extendedLevel.SelectableLevel.levelID] : 1.0f;
-        __result = __result + (multiplier < 1.0 ? string.Format("{0:N0}%", multiplier * 100.0) : "");
+        __result += multiplier < 1.0 ? string.Format("{0:N0}%", multiplier * 100.0) : "";
     }
 }

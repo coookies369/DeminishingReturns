@@ -31,7 +31,7 @@ public class DeminishingReturns : BaseUnityPlugin
         Logger = base.Logger;
         Instance = this;
 
-        MyConfig = new(base.Config);
+        MyConfig = new(Config);
 
         Patch();
         Patches.StartOfRoundPatch.Init();
