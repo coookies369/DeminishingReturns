@@ -19,7 +19,7 @@ public class Plugin : BaseUnityPlugin
 {
     public static Plugin Instance { get; private set; } = null!;
     internal new static ManualLogSource Logger { get; private set; } = null!;
-    internal static Harmony? Harmony { get; set; }
+    internal static Harmony Harmony { get; set; }
 
     public static Config MyConfig { get; internal set; }
 

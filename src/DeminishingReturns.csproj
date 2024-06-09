@@ -17,9 +17,9 @@
     </PropertyGroup>
 
     <!-- Enable Nullable for better IDE null-checking -->
-    <PropertyGroup>
+    <!-- <PropertyGroup>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+    </PropertyGroup> -->
 
     <!-- Set NuGet Sources -->
     <PropertyGroup>
