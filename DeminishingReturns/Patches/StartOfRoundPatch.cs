@@ -87,7 +87,7 @@ public class StartOfRoundPatch
                 }
 
                 DeminishingReturns.Logger.LogDebug($"Collected {scrap_collected} scrap of {scrap_count} total");
-                newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count;
+                newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count * Config.reductionMultiplier.Value;
                 newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
             }
             if (Config.resetAfterQuota.Value && (TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled <= 0f || __instance.isChallengeFile))
