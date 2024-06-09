@@ -15,9 +15,9 @@ namespace DeminishingReturns;
 [BepInDependency("MaxWasUnavailable.LethalModDataLib", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("LethalNetworkAPI", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("imabatby.lethallevelloader", BepInDependency.DependencyFlags.SoftDependency)]
-public class DeminishingReturns : BaseUnityPlugin
+public class Plugin : BaseUnityPlugin
 {
-    public static DeminishingReturns Instance { get; private set; } = null!;
+    public static Plugin Instance { get; private set; } = null!;
     internal new static ManualLogSource Logger { get; private set; } = null!;
     internal static Harmony? Harmony { get; set; }
 
