@@ -1,3 +1,9 @@
+# 1.3.0
+
+* Added changelog
+* Added reductionMultiplier
+* Some code refactoring
+
 # 1.2.3
 
 * Added compatability for SaveOurLoot and other mods that allow you to keep scrap after a team wipe
