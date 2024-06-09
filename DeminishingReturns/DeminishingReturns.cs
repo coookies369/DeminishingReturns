@@ -24,7 +24,7 @@ public class DeminishingReturns : BaseUnityPlugin
     public static Config MyConfig { get; internal set; }
 
     [ModData(SaveWhen.OnAutoSave, LoadWhen.OnLoad, SaveLocation.CurrentSave, ResetWhen.OnGameOver)]
-    public static Dictionary<int, float> moonMultipliers = [];
+    public static Dictionary<int, float> moonMultipliers = new();
 
     private void Awake()
     {

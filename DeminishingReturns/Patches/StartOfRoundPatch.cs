@@ -11,7 +11,7 @@ public class StartOfRoundPatch
 {
     public static LethalServerMessage<Dictionary<int, float>> syncMoonMultipliersServer = new("moonMultipliers");
     public static LethalClientMessage<Dictionary<int, float>> syncMoonMultipliersClient = new("moonMultipliers");
-    private static List<GrabbableObject> new_scrap = [];
+    private static List<GrabbableObject> new_scrap = new();
     private static int scrap_count;
 
     public static void Init()
