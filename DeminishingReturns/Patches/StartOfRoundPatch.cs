@@ -1,6 +1,4 @@
 using HarmonyLib;
-using BepInEx.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,7 +11,7 @@ public class StartOfRoundPatch
 {
     public static LethalServerMessage<Dictionary<int, float>> syncMoonMultipliersServer = new("moonMultipliers");
     public static LethalClientMessage<Dictionary<int, float>> syncMoonMultipliersClient = new("moonMultipliers");
-    private static List<GrabbableObject> new_scrap = new List<GrabbableObject>();
+    private static List<GrabbableObject> new_scrap = [];
     private static int scrap_count;
 
     public static void Init()
@@ -28,7 +26,7 @@ public class StartOfRoundPatch
 
     [HarmonyPatch("StartGame")]
     [HarmonyPrefix]
-    private static void reduceScrapAmount(StartOfRound __instance)
+    private static void ReduceScrapAmount(StartOfRound __instance)
     {
         if (__instance.IsServer && __instance.inShipPhase)
         {
@@ -42,16 +40,17 @@ public class StartOfRoundPatch
 
     [HarmonyPatch("EndOfGame")]
     [HarmonyPrefix]
-    private static void recordScrapCount(StartOfRound __instance)
+    private static void RecordScrapCount(StartOfRound __instance)
     {
         if (__instance.IsServer)
         {
-            GrabbableObject[] array = UnityEngine.Object.FindObjectsOfType<GrabbableObject>();
-            
+            GrabbableObject[] array = Object.FindObjectsOfType<GrabbableObject>();
+
             scrap_count = 0;
             for (int i = 0; i < array.Length; i++)
             {
-                if (array[i].itemProperties.isScrap) {
+                if (array[i].itemProperties.isScrap)
+                {
                     scrap_count++;
                 }
             }
@@ -62,7 +61,7 @@ public class StartOfRoundPatch
 
     [HarmonyPatch("PassTimeToNextDay")]
     [HarmonyPrefix]
-    private static void setMoonMultipliers(StartOfRound __instance)
+    private static void SetMoonMultipliers(StartOfRound __instance)
     {
         if (__instance.IsServer)
         {
@@ -83,7 +82,7 @@ public class StartOfRoundPatch
                 {
                     if (scrap != null)
                     {
-                        scrap_collected ++;
+                        scrap_collected++;
                     }
                 }
 
@@ -91,7 +90,7 @@ public class StartOfRoundPatch
                 newMults[__instance.currentLevel.levelID] -= (float)scrap_collected / scrap_count;
                 newMults[__instance.currentLevel.levelID] = Mathf.Clamp(newMults[__instance.currentLevel.levelID], 0.0f, 1.0f);
             }
-            if (Config.resetAfterQuota.Value && ((float)(TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled) <= 0f || __instance.isChallengeFile))
+            if (Config.resetAfterQuota.Value && (TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled <= 0f || __instance.isChallengeFile))
             {
                 newMults.Clear();
                 DeminishingReturns.Logger.LogDebug("Cleared moon multipliers");

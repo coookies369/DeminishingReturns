@@ -1,6 +1,5 @@
 using BepInEx;
 using BepInEx.Logging;
-using BepInEx.Configuration;
 using HarmonyLib;
 using LobbyCompatibility.Attributes;
 using LobbyCompatibility.Enums;
@@ -25,7 +24,7 @@ public class DeminishingReturns : BaseUnityPlugin
     public static Config MyConfig { get; internal set; }
 
     [ModData(SaveWhen.OnAutoSave, LoadWhen.OnLoad, SaveLocation.CurrentSave, ResetWhen.OnGameOver)]
-    public static Dictionary<int, float> moonMultipliers = new Dictionary<int, float>();
+    public static Dictionary<int, float> moonMultipliers = [];
 
     private void Awake()
     {
