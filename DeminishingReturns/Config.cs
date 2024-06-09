@@ -24,7 +24,7 @@ public class Config
                 "General",
                 "ReductionMultiplier",
                 1f,
-                "Multiplier for scrap reduction. For example: if 5 of 10 scrap is collected and this value is 0.5, the penalty will be 25% instead of 50%"
+                "Multiplier for scrap reduction. For example: if a moon has a 100% multiplier, 9 of 12 scrap is collected, and reductionMultiplier is 0.5, the moon's final multiplier will be 62.5% instead of 25%"
         );
     }
 }
