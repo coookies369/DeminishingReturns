@@ -9,7 +9,7 @@ public class LLLTerminalPatch
     {
         Plugin.Harmony.Patch(
           AccessTools.Method(typeof(TerminalManager), "GetWeatherConditions"),
-          postfix: new HarmonyMethod(typeof(LLLTerminalPatch), "addDeminishedWarning")
+          postfix: new HarmonyMethod(typeof(LLLTerminalPatch), "AddDeminishedWarning")
         );
     }
 
