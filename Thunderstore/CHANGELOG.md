@@ -1,3 +1,7 @@
+# 1.3.1
+
+* Fixed mod failing to load if LethalLevelLoader was present (oops)
+
 # 1.3.0
 
 * Added changelog
